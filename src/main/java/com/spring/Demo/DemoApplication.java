@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.Demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,5 +15,10 @@ public class DemoApplication {
   @GetMapping("/")
   public String hello() {
     return "hello world!";
+  }
+  
+   @GetMapping("/test1")
+  public String hello() {
+    return "hello world! test1";
   }
 }
