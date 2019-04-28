@@ -23,6 +23,12 @@ public class DemoApplication {
 	public String hello() {
 		return "hello world!";
 	}
+	
+	@GetMapping("/test2")
+	public String test2 (){
+		
+		return "";
+	}
 
 	@GetMapping("/test1")
 	public String test1() throws IOException, GeneralSecurityException {
@@ -30,6 +36,7 @@ public class DemoApplication {
 
 		// Prints the names and majors of students in a sample spreadsheet:
 		// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+		String temp = "";
 		String spreadsheetId = "1I-575yBsH2xoAcEebKAvW19fo0KbO00xaG1ljxk2AEg";
 		String range = "A1:E";
 		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
@@ -41,8 +48,9 @@ public class DemoApplication {
 			for (List row : values) {
 				// Print columns A and E, which correspond to indices 0 and 4.
 				System.out.printf("%s, %s\n", row.get(0), row.get(0));
+				temp = row.get(0).toString();
 			}
 		}
-		return "hello world! test1";
+		return "hello world!"+temp;
 	}
 }

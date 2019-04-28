@@ -7,6 +7,7 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -63,7 +64,12 @@ public class GoogleAuthorizeUtil {
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("offline").build();
-		Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+		
+		LocalServerReceiver localReceiver = new LocalServerReceiver();
+
+		String x = flow.newAuthorizationUrl().setRedirectUri(localReceiver.getRedirectUri()).build();
+		
+		Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
 		System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
 		return credential;
 	}
