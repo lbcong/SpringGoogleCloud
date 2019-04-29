@@ -71,7 +71,7 @@ public class GoogleAuthorizeUtil {
 		InputStream in = new FileInputStream(this.getClass().getResource("/google-sheets-client-secret.json").getPath());
 		System.out.println("run4");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
+		System.out.println("run5");
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("online").build();
@@ -94,6 +94,7 @@ public class GoogleAuthorizeUtil {
 				TokenResponse response = flow.newTokenRequest(StringCode).setRedirectUri(localReceiver.getRedirectUri())
 						.execute();
 				credential = flow.createAndStoreCredential(response, "user");
+				System.out.println("run6");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			} finally {
