@@ -73,18 +73,25 @@ public class GoogleAuthorizeUtil {
 		if (credential != null && (credential.getRefreshToken() != null || credential.getExpiresInSeconds() == null
 				|| credential.getExpiresInSeconds() > 60)) {
 			return credential;
-		}else{
-			
-			URL PathStringCodeAutho = DemoApplication.class.getClassLoader().getResource("temp.txt");
-			List<String> rs = ReadFile.readFile(PathStringCodeAutho.getPath());
+		} else {
+			GetTextFromGit git = new GetTextFromGit();
+
+			List<String> rs = git.getStringFromGithubRaw(
+					"https://raw.githubusercontent.com/lbcong/SpringGoogleCloud/master/src/main/resources/temp.txt");
 
 			String StringCode = rs.get(0);
+			LocalServerReceiver localReceiver=null;
+			try {
+				localReceiver = new LocalServerReceiver.Builder().setPort(46423).setHost("localhost").build();
 
-			LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(46423).setHost("localhost")
-					.build();
+				TokenResponse response = flow.newTokenRequest(StringCode).setRedirectUri(localReceiver.getRedirectUri())
+						.execute();
+				credential = flow.createAndStoreCredential(response, "user");
+			} catch (Exception e) {
 
-			TokenResponse response = flow.newTokenRequest(StringCode).setRedirectUri(localReceiver.getRedirectUri()).execute();
-			credential = flow.createAndStoreCredential(response, "user");
+			} finally {
+				localReceiver.stop();
+			}
 			return credential;
 		}
 
