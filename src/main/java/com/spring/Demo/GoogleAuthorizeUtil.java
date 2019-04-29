@@ -28,10 +28,22 @@ import com.spring.Demo.WriteFile;
 
 public class GoogleAuthorizeUtil {
 	private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
+	private static String StaticPath;
+	static {
+		try {
+			URL sqlScriptUrl = GoogleAuthorizeUtil.class.getResource("/SheetCredential/StoredCredential");
+			String temp[] = sqlScriptUrl.getPath().split("SheetCredential/StoredCredential", 2);
+			String path = temp[0];
+			StaticPath = path;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			System.exit(1);
+		}
+	}
 
 	/** Directory to store user credentials for this application. */
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
-			"sheets.googleapis.com-java-quickstart");
+	private static final java.io.File DATA_STORE_DIR = new java.io.File(StaticPath,
+			"SheetCredential");
 
 	/** Global instance of the {@link FileDataStoreFactory}. */
 	private static FileDataStoreFactory DATA_STORE_FACTORY;
@@ -80,7 +92,7 @@ public class GoogleAuthorizeUtil {
 					"https://raw.githubusercontent.com/lbcong/SpringGoogleCloud/master/src/main/resources/temp.txt");
 
 			String StringCode = rs.get(0);
-			LocalServerReceiver localReceiver=null;
+			LocalServerReceiver localReceiver = null;
 			try {
 				localReceiver = new LocalServerReceiver.Builder().setPort(46423).setHost("localhost").build();
 
