@@ -82,11 +82,14 @@ public class DemoApplication {
 		return "hello world!" + temp;
 	}
 
+
 	public String executeCommand(String command) throws IOException, InterruptedException {
+
 
 		StringBuffer output = new StringBuffer();
 
 		Process p;
+
 
 		p = Runtime.getRuntime().exec(command);
 		p.waitFor();
