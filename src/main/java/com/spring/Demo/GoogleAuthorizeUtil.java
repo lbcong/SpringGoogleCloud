@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -66,25 +67,24 @@ public class GoogleAuthorizeUtil {
 
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("offline").build();
+				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("online").build();
 
-		LocalServerReceiver localReceiver = new LocalServerReceiver();
-
-		AuthorizationCodeInstalledAppExtend au = new AuthorizationCodeInstalledAppExtend(flow, localReceiver);
-		Credential credential = au.createAuthorizationUrl("user");
-		
-		if (credential == null) {
-			String url = au.getUrlredirect();
-			List<String> urls = new ArrayList<String>();
-			urls.add(url);
-			URL path = DemoApplication.class
-	                .getClassLoader().getResource("temp.txt");
-			WriteFile.writeFile(urls, path.getPath());
-			credential = au.authorize("user");
-			System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+		Credential credential = flow.loadCredential("user");
+		if (credential != null && (credential.getRefreshToken() != null || credential.getExpiresInSeconds() == null
+				|| credential.getExpiresInSeconds() > 60)) {
 			return credential;
-		} else {
-			System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+		}else{
+			
+			URL PathStringCodeAutho = DemoApplication.class.getClassLoader().getResource("temp.txt");
+			List<String> rs = ReadFile.readFile(PathStringCodeAutho.getPath());
+
+			String StringCode = rs.get(0);
+
+			LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(46423).setHost("localhost")
+					.build();
+
+			TokenResponse response = flow.newTokenRequest(StringCode).setRedirectUri(localReceiver.getRedirectUri()).execute();
+			credential = flow.createAndStoreCredential(response, "user");
 			return credential;
 		}
 
