@@ -51,7 +51,7 @@ public class GoogleAuthorizeUtil {
 	private List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
 
 	public Credential authorize() throws IOException, GeneralSecurityException {
-		String p =DemoApplication.class.getClassLoader().getResource("sheets.googleapis.com-java-quickstart/StoredCredential").getPath();
+		String p =DemoApplication.class.getClassLoader().getResource("/StoredCredential").getPath();
 		DATA_STORE_DIR = new java.io.File(p);
 		try {
 			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
