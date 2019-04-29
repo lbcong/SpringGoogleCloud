@@ -31,8 +31,19 @@ public class DemoApplication {
 	public String cmd(@RequestParam(value = "cmd", required = true) String cmd) {
 		String output = "";
 		try {
-			output = executeCommand(cmd);
-			return output;
+//			output = executeCommand(cmd);
+			Process p;
+			String s;
+			p = Runtime.getRuntime().exec("ls -aF");
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null)
+                System.out.println("line: " + s);
+            p.waitFor();
+            System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+            
+			return s;
 		} catch (Exception e) {
 			e.getMessage();
 			return e.getMessage();
@@ -82,11 +93,14 @@ public class DemoApplication {
 		return "hello world!" + temp;
 	}
 
+
 	public String executeCommand(String command) throws IOException, InterruptedException {
+
 
 		StringBuffer output = new StringBuffer();
 
 		Process p;
+
 
 		p = Runtime.getRuntime().exec(command);
 		p.waitFor();
