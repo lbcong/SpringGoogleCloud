@@ -1,8 +1,9 @@
 package com.spring.Demo;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.spring.Demo.GoogleAuthorizeUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.spring.Demo.ReadFile;
 
 @SpringBootApplication
@@ -27,33 +30,31 @@ public class DemoApplication {
 		return "hello world!";
 	}
 
-	@GetMapping("/cmd")
-	public String cmd(@RequestParam(value = "cmd", required = true) String cmd) {
-		String output = "";
-		try {
-//			output = executeCommand(cmd);
-			Process p;
-			String s;
-			p = Runtime.getRuntime().exec("ls -aF");
-            BufferedReader br = new BufferedReader(
-                new InputStreamReader(p.getInputStream()));
-            while ((s = br.readLine()) != null)
-                System.out.println("line: " + s);
-            p.waitFor();
-            System.out.println ("exit: " + p.exitValue());
-            p.destroy();
-            
-			return s;
-		} catch (Exception e) {
-			e.getMessage();
-			return e.getMessage();
-		}
-	}
-
 	@GetMapping("/test")
 	public String test() {
 
 		return System.getProperty("user.home") + "--" + System.getProperty("user.dir");
+	}
+
+	@GetMapping("/uploadget")
+	public String uploadget() {
+
+		return "<form method='POST' action='/uploadpost' enctype='multipart/form-data'>"
+				+ "<input type='file' name='file' /><br/><br/>" + "<input type='submit' value='Submit' />" + "</form>";
+	}
+
+	@PostMapping("/uploadpost")
+	public String uploadpost(@RequestParam("file") MultipartFile file) throws IOException {
+
+		try {
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get(System.getProperty("user.home") + "\\" + file.getOriginalFilename());
+			Files.write(path, bytes);
+			return "ok";
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+
 	}
 
 	@GetMapping("/getUrlAuthorize")
@@ -93,25 +94,4 @@ public class DemoApplication {
 		return "hello world!" + temp;
 	}
 
-
-	public String executeCommand(String command) throws IOException, InterruptedException {
-
-
-		StringBuffer output = new StringBuffer();
-
-		Process p;
-
-
-		p = Runtime.getRuntime().exec(command);
-		p.waitFor();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-		String line = "";
-		while ((line = reader.readLine()) != null) {
-			output.append(line + "\n");
-		}
-
-		return output.toString();
-
-	}
 }
