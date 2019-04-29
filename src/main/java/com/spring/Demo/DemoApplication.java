@@ -24,6 +24,7 @@ public class DemoApplication {
 	public String hello() {
 		return "hello world!";
 	}
+
 	
 	@GetMapping("/test")
 	public String test() {
@@ -31,6 +32,7 @@ public class DemoApplication {
 
 		return System.getProperty("user.home")+"--"+System.getProperty("user.dir");
 	}
+
 
 	@GetMapping("/getUrlAuthorize")
 	public String test2() {
