@@ -11,6 +11,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.spring.Demo.GoogleAuthorizeUtil;
 import org.springframework.web.bind.annotation.*;
+import com.spring.Demo.ReadFile;
 
 @SpringBootApplication
 @RestController
@@ -24,14 +25,28 @@ public class DemoApplication {
 		return "hello world!";
 	}
 	
-	@GetMapping("/test2")
-	public String test2 (){
+	@GetMapping("/test")
+	public String test() {
 		
-		return "";
+
+		return System.getProperty("user.home")+"--"+System.getProperty("user.dir");
 	}
 
-	@GetMapping("/test1")
-	public String test1() throws IOException, GeneralSecurityException {
+	@GetMapping("/getUrlAuthorize")
+	public String test2() {
+
+		List<String> rs = ReadFile.readFile(System.getProperty("user.home") + "\\temp.txt");
+		String temp = "";
+		if (rs != null) {
+			for (int i = 0; i < rs.size(); i++) {
+				temp += rs.get(i) + "\n";
+			}
+		}
+		return temp;
+	}
+
+	@GetMapping("/getSheet")
+	public String getSheet() throws IOException, GeneralSecurityException {
 		Sheets service = GoogleAuthorizeUtil.getSheetsService();
 
 		// Prints the names and majors of students in a sample spreadsheet:
@@ -51,6 +66,6 @@ public class DemoApplication {
 				temp = row.get(0).toString();
 			}
 		}
-		return "hello world!"+temp;
+		return "hello world!" + temp;
 	}
 }
