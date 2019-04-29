@@ -1,6 +1,7 @@
 package com.spring.Demo;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,7 +53,7 @@ public class GoogleAuthorizeUtil {
 
 	public Credential authorize() throws IOException, GeneralSecurityException {
 		URL sqlScriptUrl = this.getClass().getResource("/StoredCredential");
-		
+
 		System.out.println("run1");
 		System.out.println(sqlScriptUrl.getPath());
 		System.out.println("run2");
@@ -65,8 +66,10 @@ public class GoogleAuthorizeUtil {
 			t.printStackTrace();
 			System.exit(1);
 		}
-
-		InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
+		// InputStream in =
+		// GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
+		InputStream in = new FileInputStream(this.getClass().getResource("/google-sheets-client-secret.json").getPath());
+		System.out.println("run4");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
 		// Build flow and trigger user authorization request.
