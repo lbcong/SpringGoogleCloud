@@ -3,6 +3,7 @@ package com.spring.Demo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,7 +77,9 @@ public class GoogleAuthorizeUtil {
 			String url = au.getUrlredirect();
 			List<String> urls = new ArrayList<String>();
 			urls.add(url);
-			WriteFile.writeFile(urls, System.getProperty("user.home") + "\\temp.txt");
+			URL path = DemoApplication.class
+	                .getClassLoader().getResource("temp.txt");
+			WriteFile.writeFile(urls, path.getPath());
 			credential = au.authorize("user");
 			System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
 			return credential;

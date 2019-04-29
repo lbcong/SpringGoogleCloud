@@ -38,27 +38,6 @@ public class DemoApplication {
 		return System.getProperty("user.home") + "--" + System.getProperty("user.dir");
 	}
 
-	@GetMapping("/uploadget")
-	public String uploadget() {
-
-		return "<form method='POST' action='/uploadpost' enctype='multipart/form-data'>"
-				+ "<input type='file' name='file' /><br/><br/>" + "<input type='submit' value='Submit' />" + "</form>";
-	}
-
-	@PostMapping("/uploadpost")
-	public String uploadpost(@RequestParam("file") MultipartFile file) throws IOException {
-
-		try {
-			byte[] bytes = file.getBytes();
-			Path path = Paths.get(System.getProperty("user.dir") + "//" + file.getOriginalFilename());
-			Files.write(path, bytes);
-			return "ok";
-		} catch (Exception e) {
-			return e.getMessage();
-		}
-
-	}
-
 	@GetMapping("/getUrlAuthorize")
 	public String test2() {
 		URL sqlScriptUrl = DemoApplication.class
