@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
+import com.spring.Demo.WriteFile;
 
 public class GoogleAuthorizeUtil {
 	private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
@@ -64,21 +66,31 @@ public class GoogleAuthorizeUtil {
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("offline").build();
-		
+
 		LocalServerReceiver localReceiver = new LocalServerReceiver();
 
-		String x = flow.newAuthorizationUrl().setRedirectUri(localReceiver.getRedirectUri()).build();
+		AuthorizationCodeInstalledAppExtend au = new AuthorizationCodeInstalledAppExtend(flow, localReceiver);
+		Credential credential = au.createAuthorizationUrl("user");
 		
-		Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
-		System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-		return credential;
+		if (credential == null) {
+			String url = au.getUrlredirect();
+			List<String> urls = new ArrayList<String>();
+			urls.add(url);
+			WriteFile.writeFile(urls, System.getProperty("user.home") + "\\temp.txt");
+			credential = au.authorize("user");
+			System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+			return credential;
+		} else {
+			System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+			return credential;
+		}
+
 	}
-	
+
 	public static Sheets getSheetsService() throws IOException, GeneralSecurityException {
-        Credential credential = authorize();
-        return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-    }
+		Credential credential = authorize();
+		return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
+				.build();
+	}
 
 }

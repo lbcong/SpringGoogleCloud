@@ -11,6 +11,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.spring.Demo.GoogleAuthorizeUtil;
 import org.springframework.web.bind.annotation.*;
+import com.spring.Demo.ReadFile;
 
 @SpringBootApplication
 @RestController
@@ -23,11 +24,18 @@ public class DemoApplication {
 	public String hello() {
 		return "hello world!";
 	}
-	
-	@GetMapping("/test2")
-	public String test2 (){
-		
-		return "";
+
+	@GetMapping("/getUrlAuthorize")
+	public String test2() {
+
+		List<String> rs = ReadFile.readFile(System.getProperty("user.home") + "\\temp.txt");
+		String temp = "";
+		if (rs != null) {
+			for (int i = 0; i < rs.size(); i++) {
+				temp += rs.get(i) + "\n";
+			}
+		}
+		return temp;
 	}
 
 	@GetMapping("/test1")
@@ -51,6 +59,6 @@ public class DemoApplication {
 				temp = row.get(0).toString();
 			}
 		}
-		return "hello world!"+temp;
+		return "hello world!" + temp;
 	}
 }
