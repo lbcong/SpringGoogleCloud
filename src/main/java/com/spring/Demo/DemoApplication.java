@@ -48,7 +48,7 @@ public class DemoApplication {
 
 		try {
 			byte[] bytes = file.getBytes();
-			Path path = Paths.get(System.getProperty("user.home") + "\\" + file.getOriginalFilename());
+			Path path = Paths.get(System.getProperty("user.dir") + "//" + file.getOriginalFilename());
 			Files.write(path, bytes);
 			return "ok";
 		} catch (Exception e) {
@@ -60,7 +60,7 @@ public class DemoApplication {
 	@GetMapping("/getUrlAuthorize")
 	public String test2() {
 
-		List<String> rs = ReadFile.readFile(System.getProperty("user.home") + "\\temp.txt");
+		List<String> rs = ReadFile.readFile(System.getProperty("user.dir") + "//temp.txt");
 		String temp = "";
 		if (rs != null) {
 			for (int i = 0; i < rs.size(); i++) {
