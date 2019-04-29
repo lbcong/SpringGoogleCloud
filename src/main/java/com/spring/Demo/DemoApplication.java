@@ -1,6 +1,7 @@
 package com.spring.Demo;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ public class DemoApplication {
 
 	@GetMapping("/")
 	public String hello() {
+		
 		return "hello world!";
 	}
 
@@ -59,8 +61,9 @@ public class DemoApplication {
 
 	@GetMapping("/getUrlAuthorize")
 	public String test2() {
-
-		List<String> rs = ReadFile.readFile(System.getProperty("user.dir") + "//temp.txt");
+		URL sqlScriptUrl = DemoApplication.class
+                .getClassLoader().getResource("temp.txt");
+		List<String> rs = ReadFile.readFile(sqlScriptUrl.getPath());
 		String temp = "";
 		if (rs != null) {
 			for (int i = 0; i < rs.size(); i++) {
