@@ -53,14 +53,24 @@ public class GoogleAuthorizeUtil {
 
 
 	/** Global instance of the {@link FileDataStoreFactory}. */
-	private FileDataStoreFactory DATA_STORE_FACTORY;
+	private static FileDataStoreFactory DATA_STORE_FACTORY;
 
 	/** Global instance of the JSON factory. */
-	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	private static  final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 	/** Global instance of the HTTP transport. */
-	private HttpTransport HTTP_TRANSPORT;
+	private static  HttpTransport HTTP_TRANSPORT;
 
+	static {
+        try {
+            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.exit(1);
+        }
+    }
+	
 	/**
 	 * Global instance of the scopes required by this quickstart.
 	 *
@@ -71,6 +81,9 @@ public class GoogleAuthorizeUtil {
 
 	public Credential authorize() throws IOException, GeneralSecurityException {
 
+		System.out.println(new java.io.File(
+	            System.getProperty("user.home"),
+	            ".credentials/client_secret_674700710104.com.json").getAbsolutePath());
 		System.out.println("run3");
 		System.out.println(DATA_STORE_DIR.getPath());
 		InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
