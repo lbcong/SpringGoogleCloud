@@ -70,6 +70,7 @@ public class GoogleAuthorizeUtil {
 	private List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
 
 	public Credential authorize() throws IOException, GeneralSecurityException {
+
 		System.out.println("run3");
 		System.out.println(DATA_STORE_DIR.getPath());
 		InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
