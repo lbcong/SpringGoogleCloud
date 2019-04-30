@@ -34,11 +34,9 @@ public class GoogleAuthorizeUtil {
 	private static String StaticPath;
 	static {
 		try {
-			System.out.println("run1");
 			URL sqlScriptUrl = GoogleAuthorizeUtil.class.getResource("/SheetCredential/StoredCredential");
 			System.out.println(sqlScriptUrl.getPath());
 			String temp[] = sqlScriptUrl.getPath().split("SheetCredential/StoredCredential", 2);
-			System.out.println("run2");
 			String path = temp[0];
 			StaticPath = path;
 		} catch (Throwable t) {
@@ -81,19 +79,13 @@ public class GoogleAuthorizeUtil {
 
 	public Credential authorize() throws IOException, GeneralSecurityException {
 
-		System.out.println(new java.io.File(
-	            System.getProperty("user.home"),
-	            ".credentials/client_secret_674700710104.com.json").getAbsolutePath());
-		System.out.println("run3");
-		System.out.println(DATA_STORE_DIR.getPath());
 		InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
-		System.out.println("run4");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-		System.out.println("run5");
+
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("online").build();
-		System.out.println("run6");
+
 		Credential credential = flow.loadCredential("user");
 		if (credential != null && (credential.getRefreshToken() != null || credential.getExpiresInSeconds() == null
 				|| credential.getExpiresInSeconds() > 60)) {
@@ -112,7 +104,7 @@ public class GoogleAuthorizeUtil {
 				TokenResponse response = flow.newTokenRequest(StringCode).setRedirectUri(localReceiver.getRedirectUri())
 						.execute();
 				credential = flow.createAndStoreCredential(response, "user");
-				System.out.println("run7");
+
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			} finally {
