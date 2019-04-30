@@ -54,7 +54,8 @@ public class DemoApplication {
 
 	@GetMapping("/getSheet")
 	public String getSheet() throws IOException, GeneralSecurityException {
-		Sheets service = GoogleAuthorizeUtil.getSheetsService();
+		GoogleAuthorizeUtil google = new GoogleAuthorizeUtil();
+		Sheets service = google.getSheetsService();
 
 		// Prints the names and majors of students in a sample spreadsheet:
 		// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
