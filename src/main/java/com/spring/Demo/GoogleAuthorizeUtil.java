@@ -1,5 +1,7 @@
 package com.spring.Demo;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +29,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.spring.Demo.WriteFile;
 
 public class GoogleAuthorizeUtil {
+
 	private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
 	private static String StaticPath;
 	static {
@@ -45,14 +48,15 @@ public class GoogleAuthorizeUtil {
 	private static final java.io.File DATA_STORE_DIR = new java.io.File(StaticPath,
 			"SheetCredential");
 
+
 	/** Global instance of the {@link FileDataStoreFactory}. */
-	private static FileDataStoreFactory DATA_STORE_FACTORY;
+	private FileDataStoreFactory DATA_STORE_FACTORY;
 
 	/** Global instance of the JSON factory. */
-	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 	/** Global instance of the HTTP transport. */
-	private static HttpTransport HTTP_TRANSPORT;
+	private HttpTransport HTTP_TRANSPORT;
 
 	/**
 	 * Global instance of the scopes required by this quickstart.
@@ -60,23 +64,14 @@ public class GoogleAuthorizeUtil {
 	 * If modifying these scopes, delete your previously saved credentials at
 	 * ~/.credentials/sheets.googleapis.com-java-quickstart
 	 */
-	private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
+	private List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
 
-	static {
-		try {
-			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			System.exit(1);
-		}
-	}
-
-	public static Credential authorize() throws IOException, GeneralSecurityException {
-
+	public Credential authorize() throws IOException, GeneralSecurityException {
+		
 		InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
+		System.out.println("run4");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
+		System.out.println("run5");
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("online").build();
@@ -99,8 +94,9 @@ public class GoogleAuthorizeUtil {
 				TokenResponse response = flow.newTokenRequest(StringCode).setRedirectUri(localReceiver.getRedirectUri())
 						.execute();
 				credential = flow.createAndStoreCredential(response, "user");
+				System.out.println("run6");
 			} catch (Exception e) {
-
+				System.out.println(e.getMessage());
 			} finally {
 				localReceiver.stop();
 			}
@@ -109,7 +105,7 @@ public class GoogleAuthorizeUtil {
 
 	}
 
-	public static Sheets getSheetsService() throws IOException, GeneralSecurityException {
+	public Sheets getSheetsService() throws IOException, GeneralSecurityException {
 		Credential credential = authorize();
 		return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
 				.build();
