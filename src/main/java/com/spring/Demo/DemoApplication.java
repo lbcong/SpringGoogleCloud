@@ -34,9 +34,8 @@ public class DemoApplication {
 		return "hello world!";
 	}
 
-	@GetMapping("/test")
+	@GetMapping("/test1")
 	public String test() {
-
 		return System.getProperty("user.home") + "--" + System.getProperty("user.dir");
 	}
 
