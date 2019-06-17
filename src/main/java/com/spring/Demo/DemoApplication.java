@@ -31,12 +31,12 @@ public class DemoApplication {
 
 	 @GetMapping("/addcount")
 	public int addcount() {
-		return count++;
+		return counter++;
 	}
 
     	@GetMapping("/getcount")
 	public int getcount() {
-		return count;
+		return counter ;
 	}
 
 	@GetMapping("/")
