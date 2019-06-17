@@ -24,8 +24,19 @@ import com.spring.Demo.ReadFile;
 @SpringBootApplication
 @RestController
 public class DemoApplication {
+	public static int counter =1;
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
+	}
+
+	 @GetMapping("/addcount")
+	public int addcount() {
+		return count++;
+	}
+
+    	@GetMapping("/getcount")
+	public int getcount() {
+		return count;
 	}
 
 	@GetMapping("/")
@@ -34,9 +45,8 @@ public class DemoApplication {
 		return "hello world!";
 	}
 
-	@GetMapping("/test")
+	@GetMapping("/test1")
 	public String test() {
-
 		return System.getProperty("user.home") + "--" + System.getProperty("user.dir");
 	}
 
