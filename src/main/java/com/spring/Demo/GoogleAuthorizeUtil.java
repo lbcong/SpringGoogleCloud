@@ -36,9 +36,10 @@ public class GoogleAuthorizeUtil {
 		try {
 			URL sqlScriptUrl = GoogleAuthorizeUtil.class.getResource("/SheetCredential/StoredCredential");
 			System.out.println(sqlScriptUrl.getPath());
-			String temp[] = sqlScriptUrl.getPath().split("SheetCredential/StoredCredential", 2);
+			String temp[] = sqlScriptUrl.getPath().split("StoredCredential", 2);
 			String path = temp[0];
 			StaticPath = path;
+			System.out.println("com.spring.Demo.GoogleAuthorizeUtil.authorize()"+StaticPath);
 		} catch (Throwable t) {
 			t.printStackTrace();
 			System.exit(1);
@@ -81,7 +82,7 @@ public class GoogleAuthorizeUtil {
 
 		InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/google-sheets-client-secret.json");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
+		System.out.println("ok json");
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
 				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("online").build();
